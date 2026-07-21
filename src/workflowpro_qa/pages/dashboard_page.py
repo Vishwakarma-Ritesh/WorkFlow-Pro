@@ -24,6 +24,6 @@ class DashboardPage(BasePage):
 
     def expect_only_tenant_projects(self, tenant_name: str) -> None:
         for text in self.project_cards_text():
-            assert tenant_name in text, (
-                f"Project card does not belong to tenant {tenant_name}: {text}"
-            )
+            assert (
+                tenant_name in text
+            ), f"Project card does not belong to tenant {tenant_name}: {text}"

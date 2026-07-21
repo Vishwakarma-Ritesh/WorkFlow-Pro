@@ -119,9 +119,7 @@ def load_settings(environment: str | None = None) -> AppSettings:
 
     base_config = _read_yaml(CONFIG_DIR / "config.yaml")
     selected_environment = (
-        environment
-        or os.getenv("TEST_ENV")
-        or base_config["application"]["default_environment"]
+        environment or os.getenv("TEST_ENV") or base_config["application"]["default_environment"]
     )
     env_config = _read_yaml(CONFIG_DIR / "environments" / f"{selected_environment}.yaml")
 
