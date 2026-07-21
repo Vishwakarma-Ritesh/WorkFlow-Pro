@@ -1,0 +1,84 @@
+application:
+  name: WorkFlow Pro
+  default_environment: staging
+  default_tenant: company1
+  default_role: admin
+
+timeouts:
+  navigation_ms: 30000
+  action_ms: 10000
+  assertion_ms: 15000
+  api_seconds: 30
+
+reports:
+  allure_results_dir: reports/allure-results
+  html_report_path: reports/html/report.html
+  screenshots_dir: reports/screenshots
+  traces_dir: test-results
+
+api:
+  version_prefix: /api/v1
+  auth_endpoint: /api/v1/auth/login
+  projects_endpoint: /api/v1/projects
+  retry_total: 3
+  retry_backoff_factor: 0.5
+  retry_statuses: [408, 429, 500, 502, 503, 504]
+
+browser:
+  headless: true
+  viewport:
+    width: 1440
+    height: 900
+  locale: en-US
+  timezone_id: UTC
+
+selectors:
+  login_email: "#email"
+  login_password: "#password"
+  login_button: "#login-btn"
+  otp_input: "[data-testid='otp-code'], #otp-code"
+  otp_submit: "[data-testid='verify-otp'], #verify-otp"
+  dashboard_root: "[data-testid='dashboard'], main"
+  welcome_message: ".welcome-message, [data-testid='welcome-message']"
+  project_card: ".project-card, [data-testid='project-card']"
+  project_search: "[data-testid='project-search'], input[placeholder*='Search']"
+  project_name: "[data-testid='project-name']"
+  loading_indicator: "[data-testid='loading'], .loading, [aria-busy='true']"
+
+browserstack:
+  cdp_endpoint: wss://cdp.browserstack.com/playwright
+  playwright_version: 1.latest
+  debug: true
+  console: info
+  network_logs: true
+  interactive_debugging: true
+  desktop_matrix:
+    - name: chrome-windows
+      os: Windows
+      os_version: "11"
+      browser: chrome
+      browser_version: latest
+      resolution: 1920x1080
+    - name: firefox-windows
+      os: Windows
+      os_version: "11"
+      browser: playwright-firefox
+      browser_version: latest
+      resolution: 1920x1080
+    - name: safari-macos
+      os: OS X
+      os_version: Ventura
+      browser: playwright-webkit
+      browser_version: latest
+      resolution: 1920x1080
+  mobile_matrix:
+    - name: android-chrome-pixel-7
+      os: android
+      device: Google Pixel 7
+      real_mobile: true
+      browser: chrome
+    - name: ios-safari-iphone-14
+      os: ios
+      device: iPhone 14
+      real_mobile: true
+      browser: safari

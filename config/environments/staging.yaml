@@ -1,0 +1,33 @@
+environment: staging
+api_base_url_env: WORKFLOWPRO_API_BASE_URL
+tenants:
+  company1:
+    id: company1
+    name: Company1
+    base_url_env: WORKFLOWPRO_COMPANY1_BASE_URL
+    roles:
+      admin:
+        email_env: WORKFLOWPRO_COMPANY1_ADMIN_EMAIL
+        password_env: WORKFLOWPRO_COMPANY1_ADMIN_PASSWORD
+        token_env: WORKFLOWPRO_COMPANY1_ADMIN_TOKEN
+      manager:
+        email_env: WORKFLOWPRO_COMPANY1_MANAGER_EMAIL
+        password_env: WORKFLOWPRO_COMPANY1_MANAGER_PASSWORD
+      employee:
+        email_env: WORKFLOWPRO_COMPANY1_EMPLOYEE_EMAIL
+        password_env: WORKFLOWPRO_COMPANY1_EMPLOYEE_PASSWORD
+  company2:
+    id: company2
+    name: Company2
+    base_url_env: WORKFLOWPRO_COMPANY2_BASE_URL
+    roles:
+      admin:
+        email_env: WORKFLOWPRO_COMPANY2_ADMIN_EMAIL
+        password_env: WORKFLOWPRO_COMPANY2_ADMIN_PASSWORD
+        token_env: WORKFLOWPRO_COMPANY2_ADMIN_TOKEN
+      manager:
+        email_env: WORKFLOWPRO_COMPANY2_MANAGER_EMAIL
+        password_env: WORKFLOWPRO_COMPANY2_MANAGER_PASSWORD
+      employee:
+        email_env: WORKFLOWPRO_COMPANY2_EMPLOYEE_EMAIL
+        password_env: WORKFLOWPRO_COMPANY2_EMPLOYEE_PASSWORD

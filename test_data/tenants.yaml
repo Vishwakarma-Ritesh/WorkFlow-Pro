@@ -1,0 +1,7 @@
+tenants:
+  company1:
+    expected_display_name: Company1
+    isolation_group: workflowpro-company1
+  company2:
+    expected_display_name: Company2
+    isolation_group: workflowpro-company2

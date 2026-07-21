@@ -1,0 +1,27 @@
+userName: ${BROWSERSTACK_USERNAME}
+accessKey: ${BROWSERSTACK_ACCESS_KEY}
+projectName: WorkFlow Pro QA Automation
+buildName: ${BROWSERSTACK_BUILD_NAME}
+framework: pytest
+platforms:
+  - os: Windows
+    osVersion: "11"
+    browserName: chrome
+    browserVersion: latest
+  - os: Windows
+    osVersion: "11"
+    browserName: firefox
+    browserVersion: latest
+  - deviceName: Google Pixel 7
+    osVersion: "13.0"
+    browserName: chrome
+    realMobile: true
+  - deviceName: iPhone 14
+    osVersion: "16"
+    browserName: safari
+    realMobile: true
+parallelsPerPlatform: 1
+browserstackLocal: ${BROWSERSTACK_LOCAL}
+debug: true
+networkLogs: true
+consoleLogs: info

@@ -1,0 +1,13 @@
+allure-pytest>=2.14.0
+black>=25.1.0
+browserstack-local>=1.2.10
+isort>=6.0.0
+playwright>=1.45.0
+pytest>=8.2.0
+pytest-html>=4.1.1
+pytest-playwright>=0.7.0
+pytest-xdist>=3.6.1
+python-dotenv>=1.0.1
+PyYAML>=6.0.2
+requests>=2.32.0
+ruff>=0.6.0

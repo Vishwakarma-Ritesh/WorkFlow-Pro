@@ -1,0 +1,12 @@
+roles:
+  admin:
+    description: Full tenant administration permissions.
+  manager:
+    description: Project and team management permissions.
+  employee:
+    description: Project read and task update permissions.
+
+credential_policy:
+  source: environment variables
+  rotation: managed outside repository
+  storage: never commit secrets

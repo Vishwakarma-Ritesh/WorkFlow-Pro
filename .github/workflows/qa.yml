@@ -1,0 +1,109 @@
+name: QA Automation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    name: Code quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Lint
+        run: |
+          ruff check .
+          black --check .
+          isort --check-only .
+
+  tests:
+    name: Pytest
+    runs-on: ubuntu-latest
+    needs: quality
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    env:
+      TEST_ENV: staging
+      DEFAULT_TENANT: company1
+      DEFAULT_ROLE: admin
+      WORKFLOWPRO_API_BASE_URL: ${{ secrets.WORKFLOWPRO_API_BASE_URL }}
+      WORKFLOWPRO_COMPANY1_BASE_URL: ${{ secrets.WORKFLOWPRO_COMPANY1_BASE_URL }}
+      WORKFLOWPRO_COMPANY2_BASE_URL: ${{ secrets.WORKFLOWPRO_COMPANY2_BASE_URL }}
+      WORKFLOWPRO_COMPANY1_ADMIN_EMAIL: ${{ secrets.WORKFLOWPRO_COMPANY1_ADMIN_EMAIL }}
+      WORKFLOWPRO_COMPANY1_ADMIN_PASSWORD: ${{ secrets.WORKFLOWPRO_COMPANY1_ADMIN_PASSWORD }}
+      WORKFLOWPRO_COMPANY2_ADMIN_EMAIL: ${{ secrets.WORKFLOWPRO_COMPANY2_ADMIN_EMAIL }}
+      WORKFLOWPRO_COMPANY2_ADMIN_PASSWORD: ${{ secrets.WORKFLOWPRO_COMPANY2_ADMIN_PASSWORD }}
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      BROWSERSTACK_BUILD_NAME: workflowpro-${{ github.run_number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m playwright install --with-deps ${{ matrix.browser }}
+      - name: Run smoke tests
+        run: pytest -m "smoke and not browserstack" --browser ${{ matrix.browser }} -n auto
+      - name: Upload HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-${{ matrix.browser }}
+          path: reports/html/report.html
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.browser }}
+          path: reports/allure-results
+
+  mobile-browserstack:
+    name: BrowserStack mobile smoke
+    runs-on: ubuntu-latest
+    needs: quality
+    if: github.event_name == 'workflow_dispatch'
+    env:
+      TEST_ENV: staging
+      DEFAULT_TENANT: company1
+      WORKFLOWPRO_API_BASE_URL: ${{ secrets.WORKFLOWPRO_API_BASE_URL }}
+      WORKFLOWPRO_COMPANY1_BASE_URL: ${{ secrets.WORKFLOWPRO_COMPANY1_BASE_URL }}
+      WORKFLOWPRO_COMPANY1_ADMIN_EMAIL: ${{ secrets.WORKFLOWPRO_COMPANY1_ADMIN_EMAIL }}
+      WORKFLOWPRO_COMPANY1_ADMIN_PASSWORD: ${{ secrets.WORKFLOWPRO_COMPANY1_ADMIN_PASSWORD }}
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+      BROWSERSTACK_BUILD_NAME: workflowpro-mobile-${{ github.run_number }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+      - name: Run mobile BrowserStack tests
+        run: pytest tests/mobile -m browserstack -n 2
